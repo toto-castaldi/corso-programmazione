@@ -4,6 +4,7 @@ let posizione = 0;
 let altezzaCielo = 0;
 let tubi = [];
 let velocita = 3;
+let punti = 0;
 
 function setup() {
     createCanvas(immagini["terreno"].width - 20, 700);
@@ -12,7 +13,9 @@ function setup() {
 }
 
 function preload() {
-    immagini["bird"] = loadImage("flappy_beans/png/fbs-02.png");
+    immagini["bird-01"] = loadImage("flappy_beans/png/fbs-01.png");
+    immagini["bird-02"] = loadImage("flappy_beans/png/fbs-02.png");
+    immagini["bird-03"] = loadImage("flappy_beans/png/fbs-03.png");
     immagini["terreno"] = loadImage("flappy_beans/png/fbs-04.png");
 }
 
@@ -28,22 +31,32 @@ function draw() {
     bird.aggiorna();
     bird.disegna();
 
-    for (let indice = 0; indice < tubi.length; indice++) {
+    for (let indice = tubi.length -1 ; indice >= 0; indice--) {
         const tubo = tubi[indice];
         tubo.aggiorna();
         tubo.disegna();
+        if (tubo.x < -30) {
+            tubi.splice(indice,1);
+            punti++;
+        }
     }
 
     image(
-        immagini["terreno"], 
-        posizione % 20, 
+        immagini["terreno"],
+        posizione % 20,
         height - immagini["terreno"].height
     );
-    
+
     posizione -= velocita;
 
-    //ogni 160 frame
+    //ogni 80 frame
     if (posizione % 80 == 0) {
         tubi.push(new Pipe());
     }
+
+    textSize(32);
+    fill(0, 102, 153);
+    text(punti, 10, 60);
+
+
 }

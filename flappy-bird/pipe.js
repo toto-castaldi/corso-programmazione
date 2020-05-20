@@ -8,6 +8,9 @@ function Pipe() {
     }
 
     this.disegna = function () {
+        //fill(r,g,b)
+        //fill(v)
+        fill(255);
         rect(this.x, 0, 20, this.alto);
         rect(
             this.x, 
