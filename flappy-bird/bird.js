@@ -6,28 +6,30 @@ function Bird() {
     this.aria = 0.9;
     this.spinta = 10;
     this.altezza = 30;
-    this.inSalita = false;
-    this.animazione = ["bird-01", "bird-02", "bird-03"];
-    this.indiceAnimazione = 0;
+    this.direzioneSu = false;
+    this.animazione = ["bird-02", "bird-03", "bird-01"];
+    this.animazioneIndice = 0;
+    this.aTerra = false;
 
     this.disegna = function () {
-        if (this.inSalita) {
+        if (this.direzioneSu) {
             if (posizione % 5 == 0) {
-                this.indiceAnimazione ++;
+                this.animazioneIndice ++;
+                this.animazioneIndice %= this.animazione.length;
             }
-            
-            this.indiceAnimazione %= this.animazione.length;
-
-            let immagine = this.animazione[this.indiceAnimazione];
-            image(immagini[immagine], this.x, this.y, 30, this.altezza);
         } else {
-            image(immagini["bird-02"], this.x, this.y, 30, this.altezza);
+            this.animazioneIndice = 0;
         }
+        if (fineGioco) {
+            image(immagini["bird-morto"], this.x, this.y, 30, this.altezza);    
+        } else {
+            image(immagini[this.animazione[this.animazioneIndice]], this.x, this.y, 30, this.altezza);
+        }
+        
     }
 
     this.aggiorna = function () {
-        let posizioneAttuale = this.y;
-
+        let yAttuale = this.y;
         this.velocita += this.gravita;
         this.velocita *= this.aria;
         this.y += this.velocita;
@@ -35,6 +37,7 @@ function Bird() {
         if (this.y + this.altezza> altezzaCielo) {
             this.velocita = 0;
             this.y = altezzaCielo - this.altezza;
+            this.aTerra = true;
         }
 
         if (this.y < 0) {
@@ -42,15 +45,16 @@ function Bird() {
             this.y = 0;
         }
 
-        if (this.y >= posizioneAttuale) {
-            this.inSalita = false;
+        if (this.y < yAttuale) {
+            this.direzioneSu = true;
         } else {
-            this.inSalita = true;
+            this.direzioneSu = false;
         }
     }
 
     this.vola = function () {
         this.velocita -= this.spinta;
     }
+
 
 }

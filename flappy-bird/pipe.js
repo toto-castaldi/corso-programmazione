@@ -1,23 +1,25 @@
 function Pipe() {
     this.x = width;
-    this.alto = random(10, altezzaCielo / 2);
-    this.spazio = random(50, altezzaCielo / 2);
+
+    this.alto = random(-320, -28);
+    this.spazio = random(30, 80);
 
     this.aggiorna = function () {
         this.x -= velocita;
     }
 
     this.disegna = function () {
-        //fill(r,g,b)
-        //fill(v)
-        fill(255);
-        rect(this.x, 0, 20, this.alto);
-        rect(
-            this.x, 
-            this.alto + this.spazio,
-            20, 
-            altezzaCielo - this.alto - this.spazio
-        );
+        image(immagini["tubo-su"], this.x , this.alto);
+        image(immagini["tubo-giu"], this.x , this.alto + this.spazio + 536);
+    }
+
+    this.colpito = function (bird) {
+        if (bird.x > this.x && bird.x < this.x + 20) {
+            if ((bird.y < this.alto + 300) || (bird.y > this.alto + this.spazio + 536)) {
+                return true;
+            }
+        } 
+        return false;
     }
 
 

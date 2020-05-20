@@ -5,6 +5,7 @@ let altezzaCielo = 0;
 let tubi = [];
 let velocita = 3;
 let punti = 0;
+let fineGioco = false;
 
 function setup() {
     createCanvas(immagini["terreno"].width - 20, 700);
@@ -16,7 +17,10 @@ function preload() {
     immagini["bird-01"] = loadImage("flappy_beans/png/fbs-01.png");
     immagini["bird-02"] = loadImage("flappy_beans/png/fbs-02.png");
     immagini["bird-03"] = loadImage("flappy_beans/png/fbs-03.png");
+    immagini["bird-morto"] = loadImage("flappy_beans/png/fbs-25.png");
     immagini["terreno"] = loadImage("flappy_beans/png/fbs-04.png");
+    immagini["tubo-su"] = loadImage("flappy_beans/png/fbs-05.png");
+    immagini["tubo-giu"] = loadImage("flappy_beans/png/fbs-06.png");
 }
 
 function keyPressed() {
@@ -28,8 +32,13 @@ function keyPressed() {
 function draw() {
     background(120, 222, 218);
 
+    
+
     bird.aggiorna();
-    bird.disegna();
+    
+    if (bird.aTerra) {
+        fineGioco = true;
+    }
 
     for (let indice = tubi.length -1 ; indice >= 0; indice--) {
         const tubo = tubi[indice];
@@ -39,7 +48,19 @@ function draw() {
             tubi.splice(indice,1);
             punti++;
         }
+        if (tubo.colpito(bird)) {
+            fineGioco = true;
+        }
     }
+
+
+    //ogni 80 frame
+    if (posizione % 80 == 0) {
+        tubi.push(new Pipe());
+    }
+
+
+    bird.disegna();
 
     image(
         immagini["terreno"],
@@ -49,9 +70,8 @@ function draw() {
 
     posizione -= velocita;
 
-    //ogni 80 frame
-    if (posizione % 80 == 0) {
-        tubi.push(new Pipe());
+    if (fineGioco) {
+        noLoop();
     }
 
     textSize(32);
